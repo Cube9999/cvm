@@ -2,11 +2,12 @@
 #define VMSTATUS_H
 
 enum VmStatus {
-	ERROR_SYNTAX,
+	ERRO_SYNTAX,
 	ERROR_UNKNOWN,
 	ERROR_SUCCESS,
 	ERROR_MAGICNUMBER
 };
 
+typedef enum VmStatus VmStatus;
 
 #endif

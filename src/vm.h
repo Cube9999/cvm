@@ -1,4 +1,4 @@
-#include "VmStatus.h"
+#include "vmstatus.h"
 #include "stack.h"
 #ifndef VM_H
 #define VM_H
@@ -15,6 +15,6 @@ struct Vm {
 	uint8_t* codebuff;
 };
 
-enum VmStatus vm_mainloop(struct Vm vm);
+VmStatus vm_mainloop(struct Vm vm);
 
 #endif
