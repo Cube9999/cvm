@@ -1,4 +1,4 @@
-#include "VmStatus.h"
+#include "vmstatus.h"
 #include "stack.h"
 #ifndef VM_H
 #define VM_H
@@ -14,6 +14,6 @@ struct Vm {
 	int codesize; // used internally
 };
 
-enum ErrCode vm_mainloop(struct Vm vm);
+VmStatus vm_mainloop(struct Vm vm);
 
 #endif
