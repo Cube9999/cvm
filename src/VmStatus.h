@@ -1,10 +1,11 @@
 #ifndef VMSTATUS_H
 #define VMSTATUS_H
 
-enum ErrCode {
-	ERRO_SYNTAX,
+enum VmStatus {
+	ERROR_SYNTAX,
 	ERROR_UNKNOWN,
-	ERROR_SUCCESS
+	ERROR_SUCCESS,
+	ERROR_MAGICNUMBER
 };
 
 

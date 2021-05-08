@@ -12,8 +12,9 @@ struct Vm {
 	int r3;
 
 	int codesize; // used internally
+	uint8_t* codebuff;
 };
 
-enum ErrCode vm_mainloop(struct Vm vm);
+enum VmStatus vm_mainloop(struct Vm vm);
 
 #endif
