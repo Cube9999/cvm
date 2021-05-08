@@ -1,7 +1,10 @@
 #include <stdio.h>
+#include "./stack.h"
+#include "./opcodes.h"
 
-main() 
+
+int main()
 {
-	printf("hello, world");
-	return 0;	
+
+	return 0;
 }
