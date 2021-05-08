@@ -1,2 +1,3 @@
 # Ignore cmake cache and build results
-build
+build/
+*.cbp
