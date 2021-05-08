@@ -12,7 +12,7 @@ struct Vm {
 	int r3;
 
 	int codesize; // used internally
-	uint8_t* codebuff;
+	byte* codebuff;
 };
 
 VmStatus vm_mainloop(struct Vm vm);

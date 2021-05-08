@@ -1,9 +1,9 @@
-#include <stdint.h>
 #ifndef CVM_STACK_H
 #define CVM_STACK_H
+#include "typedefs.h"
 
 struct Stack {
-    uint8_t stack[10];
+    byte stack[10];
     int total_size;
     int allocated;
 };
