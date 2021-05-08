@@ -27,7 +27,7 @@ void push_stack(Stack* stack, int value) {
 }
 
 void pop_stack(Stack* stack) {
-    stack->stack[stack->allocated-1] = 0;
+    stack->stack[--stack->allocated] = 0;
 }
 
 int top_stack(Stack* stack) {
