@@ -3,3 +3,4 @@ build/
 *.cbp
 *.depend
 *.layout
+.vscode

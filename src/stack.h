@@ -1,6 +1,8 @@
 #ifndef CVM_STACK_H
 #define CVM_STACK_H
-#include "typedefs.h"
+
+typedef unsigned char byte;
+typedef unsigned short word;
 
 struct Stack {
     byte stack[10];
@@ -10,27 +12,12 @@ struct Stack {
 
 typedef struct Stack Stack;
 
-Stack* create_stack() {
-    Stack stack;
-    Stack* stack_ptr = &stack;
-    stack.total_size = 10;
-    stack.allocated = 0;
-    return stack_ptr;
-}
+Stack* create_stack();
 
-void push_stack(Stack* stack, int value) {
-    stack->stack[stack->allocated++] = value;
-    if (stack->total_size == stack->allocated) { // FIXME: This condition is not thread-safe in case we ever decided to add threading.
+void push_stack(Stack* stack, int value);
 
-    }
-}
+void pop_stack(Stack* stack);
 
-void pop_stack(Stack* stack) {
-    stack->stack[--stack->allocated] = 0;
-}
-
-int top_stack(Stack* stack) {
-    return stack->stack[stack->allocated-1];
-}
+byte* top_stack(Stack* stack);
 
 #endif // CVM_STACK_H
