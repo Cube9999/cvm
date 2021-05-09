@@ -1,8 +1,8 @@
-#ifndef VMSTATUS_H
-#define VMSTATUS_H
+#ifndef CVM_VMSTATUS_H
+#define CVM_VMSTATUS_H
 
 enum VmStatus {
-	ERRO_SYNTAX,
+	ERROR_SYNTAX,
 	ERROR_UNKNOWN,
 	ERROR_SUCCESS,
 	ERROR_MAGICNUMBER
@@ -10,4 +10,4 @@ enum VmStatus {
 
 typedef enum VmStatus VmStatus;
 
-#endif
+#endif // CVM_VMSTATUS_H
