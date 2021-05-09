@@ -16,6 +16,7 @@ void push_stack(Stack* stack, int value) {
         //resize_stack(stack, stack->total_size + 10);
         stack->total_size *= 2;
         stack->stack = realloc(stack->stack, stack->total_size * sizeof(byte));
+        stack->allocated /= 2;
     }
     stack->stack[stack->allocated++] = value;
 }

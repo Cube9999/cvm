@@ -6,7 +6,7 @@
 int main()
 {
     Stack* stack = create_stack();
-    for (int i = 0; i < 25; ++i) {
+    for (int i = 0; i < 45; ++i) {
          printf("total size: %d | total allocated: %d\n", stack->total_size, stack->allocated);
         push_stack(stack, i);
     }
