@@ -1,4 +1,5 @@
 #include "./stack.h"
+#include <stdio.h>
 #include <stdlib.h>
 
 Stack* create_stack() {
@@ -6,15 +7,17 @@ Stack* create_stack() {
     Stack* stack_ptr = &stack;
     stack.total_size = 10;
     stack.allocated = 0;
-    stack.stack = (int*)calloc(stack.total_size, sizeof(byte));
+    stack.stack = malloc(stack.total_size * sizeof(byte));
     return stack_ptr;
 }
 
 void push_stack(Stack* stack, int value) {
-    stack->stack[stack->allocated++] = value;
-    if (stack->total_size == stack->allocated) { // FIXME: This condition is not thread-safe in case we ever decided to add threading.
-        // TODO: Stack reallocation
+    if (stack->allocated == stack->total_size) { // FIXME: This condition is not thread-safe in case we ever decided to add threading.
+        //resize_stack(stack, stack->total_size + 10);
+        stack->total_size *= 2;
+        stack->stack = realloc(stack->stack, stack->total_size * sizeof(byte));
     }
+    stack->stack[stack->allocated++] = value;
 }
 
 void pop_stack(Stack* stack) {
