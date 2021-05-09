@@ -1,10 +1,11 @@
-#include "opcodes.h"
+#ifndef CVM_INSTRUCTION_H
+#define CVM_INSTRUCTION_H
+#include "./opcodes.h"
 #include <stdint.h>
 
-#ifndef VM_H
-#define VM_H
 struct Instruction {
 	Opcode op;
-	uint8_t flags;
+	uint8_t* flags;
 };
+
 #endif

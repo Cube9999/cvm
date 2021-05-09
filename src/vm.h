@@ -1,20 +1,16 @@
-#include "vmstatus.h"
-#include "stack.h"
-#ifndef VM_H
-#define VM_H
+#ifndef CVM_VM_H
+#define CVM_VM_H
+#include "./vmstatus.h"
+#include "./stack.h"
 
 struct Vm {
 	Stack stack;
-	int IP;
-
-	int r1;
-	int r2;
-	int r3;
-
+	int ip;
+	int registers[3];
 	int codesize; // used internally
 	byte* codebuff;
 };
 
 VmStatus vm_mainloop(struct Vm vm);
 
-#endif
+#endif // CVM_VM_H

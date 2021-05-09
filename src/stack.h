@@ -13,11 +13,8 @@ struct Stack {
 typedef struct Stack Stack;
 
 Stack* create_stack();
-
 void push_stack(Stack* stack, int value);
-
 void pop_stack(Stack* stack);
-
 byte* top_stack(Stack* stack);
 
 #endif // CVM_STACK_H
