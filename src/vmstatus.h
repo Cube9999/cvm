@@ -10,5 +10,6 @@ enum VmStatus {
 };
 
 typedef enum VmStatus VmStatus;
+typedef char status_Code;
 
 #endif // CVM_VMSTATUS_H

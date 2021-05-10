@@ -9,7 +9,7 @@ int main()
          printf("total size: %d | total allocated: %d\n", stack.total_size, stack.allocated);
         push_stack(&stack, i);
     }
-    printf("%d", *top_stack(&stack));
+	printf("%d", *top_stack(&stack));
     terminate_stack(&stack);
 	return 0;
 }

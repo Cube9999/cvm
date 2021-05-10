@@ -1,4 +1,5 @@
 #include "./stack.h"
+#include "./vmstatus.h"
 #include <stdlib.h>
 
 Stack create_stack() {
@@ -6,10 +7,13 @@ Stack create_stack() {
     stack.total_size = 10;
     stack.allocated = 0;
     stack.stack = malloc(stack.total_size);
+    for (byte i = 0; i < stack.total_size; ++i) {
+		stack.stack[i] = 0;
+    }
     return stack;
 }
 
-int resize_stack(Stack* stack, stack_size new_size) {
+status_Code resize_stack(Stack* stack, stack_size new_size) {
 	stack->stack = realloc(stack->stack, new_size);
 	if (stack->stack != 0) {
 		stack->total_size = new_size;
@@ -31,6 +35,8 @@ void pop_stack(Stack* stack) {
 }
 
 byte* top_stack(Stack* stack) {
+	if (stack->allocated == 0)
+		return &stack->stack[0];
     return &stack->stack[stack->allocated-1];
 }
 
