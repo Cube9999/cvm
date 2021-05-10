@@ -2,7 +2,6 @@
 #include "./stack.h"
 #include "./opcodes.h"
 
-
 int main()
 {
     Stack stack = create_stack();

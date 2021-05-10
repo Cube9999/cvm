@@ -1,5 +1,4 @@
 #include "./stack.h"
-#include <stdio.h>
 #include <stdlib.h>
 
 Stack create_stack() {
@@ -10,14 +9,19 @@ Stack create_stack() {
     return stack;
 }
 
-void resize_stack(Stack* stack, stack_size new_size) {
+int resize_stack(Stack* stack, stack_size new_size) {
 	stack->stack = realloc(stack->stack, new_size);
+	if (stack->stack != 0) {
+		stack->total_size = new_size;
+		return 1;
+	} else {
+		return 0;
+	}
 }
 
 void push_stack(Stack* stack, int value) {
     if (stack->allocated == stack->total_size) { // FIXME: This condition is not thread-safe in case we ever decided to add threading.
-        stack->total_size *= 2;
-        stack->stack = realloc(stack->stack, stack->total_size);
+        resize_stack(stack, stack->total_size * 2);
     }
     stack->stack[stack->allocated++] = value;
 }
