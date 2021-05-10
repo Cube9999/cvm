@@ -7,7 +7,7 @@ struct Vm {
 	Stack stack;
 	int ip;
 	int registers[3];
-	int codesize; // used internally
+	int endptr; /* pointer to the last instruction */
 	byte* codebuff;
 };
 

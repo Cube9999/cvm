@@ -12,5 +12,11 @@ uint32_t read32(uint8_t* buff, int idx)
 			| (buff[idx + 2] << 8) | (buff[idx + 3]);
 }
 
+/* Just for completeness */
+uint8_t read8(uint8_t* buff, int idx) 
+{
+	return buff[idx];
+}
+
 
 #endif // CVM_BITREADER_H

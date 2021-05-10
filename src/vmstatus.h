@@ -5,7 +5,8 @@ enum VmStatus {
 	ERROR_SYNTAX,
 	ERROR_UNKNOWN,
 	ERROR_SUCCESS,
-	ERROR_MAGICNUMBER
+	ERROR_MAGICNUMBER,
+	ERROR_BADINSTR,
 };
 
 typedef enum VmStatus VmStatus;
