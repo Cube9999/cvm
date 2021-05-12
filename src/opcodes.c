@@ -21,4 +21,5 @@ Opcode get_opcode(byte index) {
 	case 8:
 		return JUMP;
 	}
+	return -1;
 }
