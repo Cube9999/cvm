@@ -33,20 +33,13 @@ int main()
 		}
 	};
 	Bytecode bytecode;
-	read_from_file(&bytecode, "test.bin");
-	for (int i = 0; i < bytecode.length*4; ++i) {
-		printf("%d ", bytecode.raw_data[i]);
-	}
-	//Bytecode bytecode;
-	//to_bytecode(&bytecode, instructions, 7);
-	//save_to_file(&bytecode, "test.bin");
-	/*
-	Instruction* L_instructions = to_instructions(&bytecode);
-	for (int i = 0; i < bytecode.length; ++i) {
+	read_from_file(&bytecode, "test.bin"); // Read from test.bin
+	Instruction* L_instructions = to_instructions(&bytecode); // Convert the bytecode to instructions
+	for (int i = 0; i < bytecode.length; ++i) { // Print every single instruction and their arguments.
 		Instruction current = L_instructions[i];
 		printf("Opcode(%d) Args(%d, %d, %d)\n", current.op, current.args[0], current.args[1], current.args[2]);
 	}
-	free(L_instructions);
-	*/
+	free_bytecode(&bytecode);
+	free(instructions);
 	return 0;
 }
