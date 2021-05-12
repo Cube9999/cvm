@@ -19,7 +19,7 @@ status_Code resize_stack(Stack* stack, stack_size new_size) {
 		stack->total_size = new_size;
 		return 1;
 	} else {
-		return 0;
+		return -1;
 	}
 }
 

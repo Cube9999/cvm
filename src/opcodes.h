@@ -1,5 +1,6 @@
 #ifndef CVM_OPCODES_H
 #define CVM_OPCODES_H
+#include "./stack.h"
 
 enum Opcode {
     // Register
@@ -18,5 +19,6 @@ enum Opcode {
 };
 
 typedef enum Opcode Opcode;
+Opcode get_opcode(byte index);
 
 #endif // CVM_OPCODES_H
