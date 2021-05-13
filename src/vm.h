@@ -4,6 +4,8 @@
 #include "./stack.h"
 #include "bytecode.h"
 
+#define DEBUG
+
 struct Vm {
 	Stack stack;
 	int ip;
@@ -11,6 +13,6 @@ struct Vm {
 	byte cbit;
 };
 
-VmStatus vm_mainloop(struct Vm vm, struct Bytecode bytecode);
+VmStatus vm_mainloop(struct Vm vm, Bytecode bytecode);
 
 #endif // CVM_VM_H

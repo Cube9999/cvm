@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-VmStatus vm_mainloop(struct Vm vm, struct Bytecode bytecode)
+VmStatus vm_mainloop(struct Vm vm, Bytecode bytecode)
 {
 	Instruction* instrs;
 	Instruction cinstr;
@@ -14,23 +14,27 @@ VmStatus vm_mainloop(struct Vm vm, struct Bytecode bytecode)
 	vm.regs[1] = 0;
 	vm.regs[2] = 0;
 
-	while (vm.ip != bytecode.length) 
+	while (vm.ip != bytecode.length)
 	{
 		printf("Executing instruction %d\n", vm.ip);
 		cinstr = instrs[vm.ip];
 
-		switch (cinstr.op) 
+		switch (cinstr.op)
 		{
+		case HALT:
+			free_bytecode(&bytecode);
+			free(instrs);
+			return ERROR_SUCCESS;
 		case LOADCONST:
 			push_stack(&vm.stack, cinstr.args[0]);
 			vm.ip++;
 			break;
 		case LOADCONSTR:
-			if (cinstr.args[0] > 3)
+			if (cinstr.args[0] > 3) // (memory leak) bytecode & instr are not freed when condition is true
 				return ERROR_BADINSTR;
 			push_stack(&vm.stack, vm.regs[cinstr.args[0]]);
 		case GETCONST:
-			if (cinstr.args[0] > 3)
+			if (cinstr.args[0] > 3) // (memory leak) bytecode & instr are not freed when condition is true
 				return ERROR_BADINSTR;
 			vm.regs[cinstr.args[0]] = *top_stack(&vm.stack);
 		case ADD:
@@ -46,7 +50,7 @@ VmStatus vm_mainloop(struct Vm vm, struct Bytecode bytecode)
 			vm.ip++;
 			break;
 		case CMP:
-			if (cinstr.args[0] == cinstr.args[1])
+			if (cinstr.args[0] == cinstr.args[1]) // this can be vm.cbit = (cinstr.args[0] == cinstr.args[1])
 				vm.cbit = 1; /* Set the carry bit */
 			else
 				vm.cbit = 0; /* Unset the cbit incase it was set */
@@ -54,22 +58,30 @@ VmStatus vm_mainloop(struct Vm vm, struct Bytecode bytecode)
 			break;
 		case EQ:
 			/* TODO: Overflow checking */
-			if (vm.cbit)
+			if (vm.cbit) // (potential issue) A fallthrough may occur is vm.cbit is 0.
 				vm.ip = cinstr.args[0]; /* Jump to arg1 */
 				break;
 		case JUMP:
 			vm.ip = cinstr.args[0]; /* Jump to arg1 */
 			break;
+		case PRINT:
+			printf("%c", cinstr.args[0]);
+			vm.ip++;
+			break;
 		default:
+#ifdef DEBUG
 			printf("UNKOWN INSTRUCTION %x. IGNORING..", cinstr.op);
-		}	
+#else
+			return EXIT_FAILURE;
+#endif
+		}
 	}
 
-
+#ifdef DEBUG
 	printf("============================ DEBUGGING INFO ============================\n");
 	printf("--------------- STACK ------------\n");
 	printf("STACK_SIZE = %d\n", vm.stack.total_size);
-	for (int i = 0; i < vm.stack.total_size; ++i) 
+	for (int i = 0; i < vm.stack.total_size; ++i)
 	{
 		printf("\tv=%d\ti=%d\n", vm.stack.stack[i], i);
 	}
@@ -77,8 +89,9 @@ VmStatus vm_mainloop(struct Vm vm, struct Bytecode bytecode)
 	printf("LAST IP = %d\nENDPTR == IP IS %s\n", vm.ip, (vm.ip == bytecode.length) ? "TRUE" : "FALSE");
 	printf("--------------- REGS ------------\n");
 	printf("\tr1=%d\tr2=%d\tr3=%d\n", vm.regs[0], vm.regs[1], vm.regs[2]);
+#endif
 
 	free_bytecode(&bytecode);
 	free(instrs);
-	return ERROR_SUCCESS;
+	return ERROR_FAILURE; // Should always end with a HALT to indicate a successful end.
 }
