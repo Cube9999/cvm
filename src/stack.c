@@ -41,6 +41,5 @@ byte* top_stack(Stack* stack) {
 }
 
 void terminate_stack(Stack* stack) {
-    // no cube, there are no smart pointers in C, you actually have to call terminate_stack yourself!
     free(stack->stack);
 }

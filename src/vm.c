@@ -1,96 +1,67 @@
-/*! TODO: Make a serializer library and then port the vm to it, it's not a good idea to have the serializer here. !*/
 #include "vm.h"
-#include "bitreader.h"
-#include "instruction.h"
-#include <limits.h>
+#include <stdlib.h>
+#include <stdio.h>
 
-#define isbitset(x, y) (x & (1<<y))
-
-/* Stolen from stackoverflow because I got mad at bitwise again! */
-unsigned getbits(unsigned value, unsigned offset, unsigned n)
+VmStatus vm_mainloop(struct Vm vm, struct Bytecode bytecode)
 {
-  const unsigned max_n = CHAR_BIT * sizeof(unsigned);
-  if (offset >= max_n)
-    return 0; /* value is padded with infinite zeros on the left */
-  value >>= offset; /* drop offset bits */
-  if (n >= max_n)
-    return value; /* all  bits requested */
-  const unsigned mask = (1u << n) - 1; /* n '1's */
-  return value & mask;
-}
+	Instruction* instrs;
+	Instruction cinstr;
 
-
-struct Flags vm_parseflags(byte aflags) 
-{
-	/* This is how the flags work:
-		bit #1 - if set, the 1st instruction is an address (like PUSH 0x1000) otherwise it's a register (PUSH R1)
-		bit #2 - same as above but with arg #2, unset if the instruction only has 1 arg
-		bit #3-6 - Defines what register is being used (001 is r1, 010 is r2 and 011 is r3), zeros if instruction does not have a second argument or it isn't a register
-		bit #6-8 - Same as above but with arg #2, zeros if instruction does not have a second argument or it isn't a register
-	 */
-
-	struct Flags flags;
-
-	flags.firstArgIsAddr = isbitset(aflags, 0) ? 1 : 0;
-	flags.secondArgIsAddr = isbitset(aflags, 1) ? 1 : 0;
-
-	flags.regForarg1 = getbits(aflags, 3, 3);
-	flags.regForarg2 = getbits(aflags, 6, 3);
-	
-	return flags;
-
-}
-
-VmStatus vm_mainloop(struct Vm vm)
-{
-
+	instrs = to_instructions(&bytecode);
+	vm.ip = 0;
 	vm.stack = create_stack();
-	/* Check for the magic number */
-	if (read32(vm.codebuff, 0) != 0x0743564D) /* \07CVM */
+	vm.regs[0] = 0;
+	vm.regs[1] = 0;
+	vm.regs[2] = 0;
+
+	while (vm.ip != bytecode.length) 
 	{
-		return ERROR_MAGICNUMBER;
-	}
+		printf("Executing instruction %d\n", vm.ip);
+		cinstr = instrs[vm.ip];
 
-	vm.ip = 4; /* We start from 4 to skip the magic number */
-
-	while (vm.ip != vm.endptr) 
-	{
-		struct Instruction currinstr;
-		currinstr.flags = vm_parseflags(read8(vm.codebuff, vm.ip + 1));
-		currinstr.op = read8(vm.codebuff, vm.ip);
-
-		/* Flags might be corrupted, we dont want to continue if that's the case so we crash */
-		if (currinstr.flags.firstArgIsAddr && currinstr.flags.regForarg1 == 0 ||
-			 currinstr.flags.secondArgIsAddr && currinstr.flags.regForarg2 == 0) 
-			 {
-				return ERROR_BADINSTR;
-			 }
-
-		/* Finally, we get to the actual execution! This will be fun... */
-		switch (currinstr.op) 
+		switch (cinstr.op) 
 		{
 		case LOADCONST:
-			if (currinstr.flags.firstArgIsAddr) 
-			{
-				/* TODO: Add support for 32 bit addresses */
-				vm.registers[1] = read16(vm.codebuff, vm.ip + 2);
-				vm.ip += 4; /* One to skip to the next instruction and flag, and the other two because of the 16 bit int */
-			}
-			else 
-			{
-				vm.registers[1] = currinstr.flags.regForarg1;
-				vm.ip += 2; /* Here we don't need to jump 4 bytes because there's no 16 bit int */
-			}
+			push_stack(&vm.stack, cinstr.args[0]);
+			vm.ip++;
 			break;
+		case LOADCONSTR:
+			if (cinstr.args[0] > 3)
+				return ERROR_BADINSTR;
+			push_stack(&vm.stack, vm.regs[cinstr.args[0]]);
+		case GETCONST:
+			if (cinstr.args[0] > 3)
+				return ERROR_BADINSTR;
+			vm.regs[cinstr.args[0]] = *top_stack(&vm.stack);
 		case ADD:
-			if (currinstr.flags.firstArgIsAddr) 
-			{
-
-			}
+			push_stack(&vm.stack, cinstr.args[0] + cinstr.args[1]);
+			vm.ip++;
 			break;
-		}
-
+		case SUB:
+			push_stack(&vm.stack, cinstr.args[0] - cinstr.args[1]);
+			vm.ip++;
+			break;
+		case MUL:
+			push_stack(&vm.stack, cinstr.args[0] * cinstr.args[1]);
+			vm.ip++;
+			break;
+		}	
 	}
 
+
+	printf("============================ DEBUGGING INFO ============================\n");
+	printf("--------------- STACK ------------\n");
+	printf("STACK_SIZE = %d\n", vm.stack.total_size);
+	for (int i = 0; i < vm.stack.total_size; ++i) 
+	{
+		printf("\tv=%d\ti=%d\n", vm.stack.stack[i], i);
+	}
+	printf("----------------------------------\n");
+	printf("LAST IP = %d\nENDPTR == IP IS %s\n", vm.ip, (vm.ip == bytecode.length) ? "TRUE" : "FALSE");
+	printf("--------------- REGS ------------\n");
+	printf("\tr1=%d\tr2=%d\tr3=%d\n", vm.regs[0], vm.regs[1], vm.regs[2]);
+
+	free_bytecode(&bytecode);
+	free(instrs);
 	return ERROR_SUCCESS;
 }

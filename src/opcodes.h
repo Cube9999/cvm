@@ -3,22 +3,18 @@
 #include "./stack.h"
 
 enum Opcode {
-    // Register
-    LOADCONST, // Loads a constant onto the register
-    // Arithmetic
-    ADD, // Addition
-    SUB, // Subtraction
-    MUL, // Multiplication
-    // Comparison
-    EQUAL, // is equal to
-    GT, // Greater than
-    LT, // Less than
-    // Other
-    CALL, // Calls a function
-    JUMP, // Unconditional jump
+    /* OP           EXPLANATION */
+    LOADCONST,      /* Pushes an int into the stack */
+    LOADCONSTR,     /* Pushes the value of a register to the stack*/
+    GETCONST,       /* Gets the first value off the stack and puts in a register */
+    ADD,            /* Addition */
+    SUB,            /* Subtraction */
+    MUL,            /* Multiplication */
+    CMP,            /* Compare, sets the clear bit if equal */
+    EQ,             /* If equal, jump */
+    JUMP,           /* Unconditional jump */
+
 };
 
 typedef enum Opcode Opcode;
-Opcode get_opcode(byte index);
-
 #endif // CVM_OPCODES_H

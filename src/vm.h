@@ -2,15 +2,15 @@
 #define CVM_VM_H
 #include "./vmstatus.h"
 #include "./stack.h"
+#include "bytecode.h"
 
 struct Vm {
 	Stack stack;
 	int ip;
-	int registers[3];
-	int endptr; /* pointer to the last instruction */
-	byte* codebuff;
+	int regs[3];
+	byte cbit;
 };
 
-VmStatus vm_mainloop(struct Vm vm);
+VmStatus vm_mainloop(struct Vm vm, struct Bytecode bytecode);
 
 #endif // CVM_VM_H
