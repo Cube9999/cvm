@@ -19,12 +19,14 @@ main()
 	};
 
 	Bytecode bytecode;
-	to_bytecode(&bytecode, instructions, 2);
-	save_to_file(&bytecode, "test.bin");
-	
 	struct Vm vm;
 
+	to_bytecode(&bytecode, instructions, 2);
+	/* Keep in mind this (atleast on my build) generates the file on build/. NOT on the root folder */
+	save_to_file(&bytecode, "test.bin");
+	
 
+	/* TODO: More error checking would be nice here */
 	if (vm_mainloop(vm, bytecode)) 
 	{
 		printf("Sucessfully executed code!");

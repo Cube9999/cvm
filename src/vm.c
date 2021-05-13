@@ -45,6 +45,23 @@ VmStatus vm_mainloop(struct Vm vm, struct Bytecode bytecode)
 			push_stack(&vm.stack, cinstr.args[0] * cinstr.args[1]);
 			vm.ip++;
 			break;
+		case CMP:
+			if (cinstr.args[0] == cinstr.args[1])
+				vm.cbit = 1; /* Set the carry bit */
+			else
+				vm.cbit = 0; /* Unset the cbit incase it was set */
+			vm.ip++;
+			break;
+		case EQ:
+			/* TODO: Overflow checking */
+			if (vm.cbit)
+				vm.ip = cinstr.args[0]; /* Jump to arg1 */
+				break;
+		case JUMP:
+			vm.ip = cinstr.args[0]; /* Jump to arg1 */
+			break;
+		default:
+			printf("UNKOWN INSTRUCTION %x. IGNORING..", cinstr.op);
 		}	
 	}
 
