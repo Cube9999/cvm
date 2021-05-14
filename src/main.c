@@ -10,26 +10,12 @@
 #define LEN(x) (sizeof(x) / sizeof(x[0]))
 
 
-int main()
+int main(int argc, char* argv[])
 {
-	Instruction instructions[] = {
-		{
-			ADD, {2, 5}
-		},
-		{
-			GETCONST, {0}
-		},
-		{
-			HALT, {0}
-		}
-	};
-
+	const char* path = argv[1];
 	Bytecode bytecode;
 	struct Vm vm;
-
-	to_bytecode(&bytecode, instructions, LEN(instructions));
-	/* Keep in mind this (atleast on my build) generates the file on build/. NOT on the root folder */
-	save_to_file(&bytecode, "test.bin");
+	read_from_file(&bytecode, path);
 
 	return vm_mainloop(vm, &bytecode);
 }

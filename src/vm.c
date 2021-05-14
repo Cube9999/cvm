@@ -64,7 +64,7 @@ bool vm_mainloop(struct Vm vm, Bytecode* bytecode)
 			vm.ip = cinstr.args[0]; /* Jump to arg1 */
 			break;
 		case PRINT:
-			printf("%c", cinstr.args[0]);
+			printf("%c", (char)*top_stack(&vm.stack));
 			vm.ip++;
 			break;
 		default:
