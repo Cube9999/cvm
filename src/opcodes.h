@@ -4,7 +4,6 @@
 
 enum Opcode {
     /* OP           EXPLANATION */
-    HALT = 0,
     LOADCONST = 1,      /* Pushes an int into the stack */
     LOADCONSTR = 2,     /* Pushes the value of a register to the stack*/
     GETCONST = 3,       /* Gets the first value off the stack and puts in a register */
@@ -15,6 +14,7 @@ enum Opcode {
     EQ = 8,             /* If equal, jump */
     JUMP = 9,           /* Unconditional jump */
     PRINT = 10,
+    HALT = 11,
 
 };
 
