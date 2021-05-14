@@ -23,7 +23,7 @@ bool vm_mainloop(struct Vm vm, Bytecode* bytecode)
 
 		switch (cinstr.op)
 		{
-		case HALT:
+		case EXIT:
 			free_bytecode(bytecode);
 			free(instrs);
 			return (cinstr.args[0] == EXIT_SUCCESS || cinstr.args[0] == EXIT_FAILURE) ? cinstr.args[0] : EXIT_FAILURE;
@@ -48,20 +48,14 @@ bool vm_mainloop(struct Vm vm, Bytecode* bytecode)
 			push_stack(&vm.stack, cinstr.args[0] * cinstr.args[1]);
 			vm.ip++;
 			break;
-		case CMP:
-			if (cinstr.args[0] == cinstr.args[1]) // this can be vm.cbit = (cinstr.args[0] == cinstr.args[1])
-				vm.cbit = 1; /* Set the carry bit */
-			else
-				vm.cbit = 0; /* Unset the cbit incase it was set */
-			vm.ip++;
-			break;
 		case EQ:
-			/* TODO: Overflow checking */
-			if (vm.cbit) // (potential issue) A fallthrough may occur is vm.cbit is 0.
-				vm.ip = cinstr.args[0]; /* Jump to arg1 */
-				break;
+			if (cinstr.args[0] == cinstr.args[1])
+				vm.ip = cinstr.args[0];
+			else
+				vm.ip++;
+			break;
 		case JUMP:
-			vm.ip = cinstr.args[0]; /* Jump to arg1 */
+			vm.ip = cinstr.args[0];
 			break;
 		case PRINT:
 			printf("%c", (char)*top_stack(&vm.stack));
